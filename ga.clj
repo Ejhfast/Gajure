@@ -26,15 +26,7 @@
   (map cross-fn (partition num-parents pop)))
 
 (defn run-ga
-  "Pass two maps, one for functions, the other for settiongs"
-  "For funcmap --"
-  "init-fn: takes one argument (a number) and initializes population."
-  "fit-fn: takes a population member and outputs fitness"
-  "mut-fn: takes a population, and returns a mutated population."
-  "sel-fn: takes a population, a fitness function, and a number to select. Returns selected members."
-  "For setting-map --"
-  "pop-sz is size of population; gen is number of generations to run; children is the number of children"
-  "to create each generation; mut-r is the rate of mutation (0-100)"
+  "Pass two maps, one for functions, the other for settings. For funcmap -- init-fn: takes one argument (a number) and initializes population. fit-fn: takes a population member and outputs fitness mut-fn: takes a population, and returns a mutated population. sel-fn: takes a population, a fitness function, and a number to select. Returns selected members. For setting-map -- pop-sz is size of population; gen is number of generations to run; children is the number of children to create each generation; mut-r is the rate of mutation (0-100)"
   [func-map setting-map]
   (let [ipop ((:init-fn func-map) (:pop-sz setting-map))]
     (loop [pop ipop
