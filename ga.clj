@@ -26,8 +26,16 @@
   (map cross-fn (partition num-parents pop)))
 
 (defn run-ga
+  "Pass two maps, one for functions, the other for settiongs"
+  "For funcmap --"
+  "init-fn: takes one argument (a number) and initializes population."
+  "fit-fn: takes a population member and outputs fitness"
+  "mut-fn: takes a population, and returns a mutated population."
+  "sel-fn: takes a population, a fitness function, and a number to select. Returns selected members."
+  "For setting-map --"
+  "pop-sz is size of population; gen is number of generations to run; children is the number of children"
+  "to create each generation; mut-r is the rate of mutation (0-100)"
   [func-map setting-map]
-  ;; I need to fix the 2*parents issue....
   (let [ipop ((:init-fn func-map) (:pop-sz setting-map))]
     (loop [pop ipop
            num (:gen setting-map)]
@@ -35,7 +43,7 @@
         (do
           (println (map (:fit-fn func-map) pop))
           (first (sort-by (:fit-fn func-map) > pop )))
-            (let [total-left (- (:pop-sz setting-map) (:parents setting-map))]
+            (let [total-left (- (:pop-sz setting-map) (:children setting-map))]
               (println (map (:fit-fn func-map) pop))
               (recur
                (concat
@@ -44,7 +52,7 @@
                   ((:sel-fn func-map)
                    pop
                    (:fit-fn func-map)
-                   (* (:parents setting-map) 2))
+                   (* (:children setting-map) 2))
                   (:cross-fn func-map)
                   2)
                  (:mut-r setting-map))
