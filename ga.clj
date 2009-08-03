@@ -6,7 +6,9 @@
   "This is a framework for creating genetic algorithms in clojure"
   "It requires the user to create a few specific operators, but otherwise works generically on sequences.")
 
-(defn roulette-select [pop fit-fn num]
+(defn roulette-select 
+  "Select num individuals from pop, with an individual's fitness porportional to selection likelihood."
+  [pop fit-fn num]
   (let [pop-fits (map fit-fn pop)
         inc-fits (iterate (fn [[pfit idx]]
                              [(+ (nth pop-fits (+ idx 1)) pfit) (+ idx 1)])
@@ -15,8 +17,11 @@
         pick-one (fn [num] (second (first (drop-while #(< (first %) num) inc-fits))))]
     (map (fn [x] (nth pop (pick-one (rand-int max-fitness)))) (range num))))
 
-(defn do-crossover [pop cross-fn num-parents]
-  (map cross-fn (partition num-parents pop)))
+(defn do-crossover
+  "Apply cross-fn to plist, partitioned into groups of num-parents. For instance,
+traditional 2-parent crossover requires that num-parents equal 2."
+  [p-list cross-fn num-parents]
+  (map cross-fn (partition num-parents p-list)))
 
 (defn run-ga
   "Pass two maps, one for functions, the other for settings.
