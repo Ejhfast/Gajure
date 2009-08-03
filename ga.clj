@@ -2,16 +2,9 @@
   (:use [clojure.contrib.seq-utils])
   (:import [java.util.Random]))
 
-(defn random-int [x]
-  (let [rnd (new java.util.Random)]
-    (try
-     (.nextInt rnd x)
-     (catch Exception _
-      0))))
-
-(defn apply-mutation [list mut-fn & [prob]]
-  (let [mut-with-prob (fn [x] (mut-fn x prob))]
-    (map mut-with-prob list)))
+(comment
+  "This is a framework for creating genetic algorithms in clojure"
+  "It requires the user to create a few specific operators, but otherwise works generically on sequences.")
 
 (defn roulette-select [pop fit-fn num]
   (let [pop-fits (map fit-fn pop)
@@ -20,7 +13,7 @@
                           [(first pop-fits) 0])
         max-fitness (apply + pop-fits)
         pick-one (fn [num] (second (first (drop-while #(< (first %) num) inc-fits))))]
-    (map (fn [x] (nth pop (pick-one (random-int max-fitness)))) (range num))))
+    (map (fn [x] (nth pop (pick-one (rand-int max-fitness)))) (range num))))
 
 (defn do-crossover [pop cross-fn num-parents]
   (map cross-fn (partition num-parents pop)))
