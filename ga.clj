@@ -29,6 +29,7 @@ For funcmap -- init-fn: takes one argument (a number) and initializes population
 fit-fn: takes a population member and outputs fitness
 mut-fn: takes a population, and returns a mutated population.
 sel-fn: takes a population, a fitness function, and a number to select. Returns selected members.
+cross-fn: takes a list of vectors, each vector containing the parent to cross.
 For setting-map -- pop-sz is size of population; gen is number of generations to run;
 children is the number of children to create each generation; mut-r is the rate of mutation (0-100)"
   [func-map setting-map]
@@ -36,11 +37,11 @@ children is the number of children to create each generation; mut-r is the rate 
     (loop [pop ipop
            num (:gen setting-map)]
       (if (zero? num)
-        (do
-          (println (map (:fit-fn func-map) pop))
-          (first (sort-by (:fit-fn func-map) > pop )))
+        (do ;; insert information you would like printed here
+          (println (first (sort-by (:fit-fn func-map) > pop ))))
             (let [total-left (- (:pop-sz setting-map) (:children setting-map))]
-              (println (map (:fit-fn func-map) pop))
+              (do ;; and here
+                (println (first (sort-by (:fit-fn func-map) > pop ))))
               (recur
                (concat
                 ((:mut-fn func-map)
@@ -54,3 +55,29 @@ children is the number of children to create each generation; mut-r is the rate 
                  (:mut-r setting-map))
                 ((:init-fn func-map) total-left))
                (dec num)))))))
+
+
+(defn list-crossover
+  "A generic crossover function for simple lists. You may need to write your own."
+  [[s1 s2]]
+  (let [point (rand-int
+               (min (count s1)
+                    (count s2)))]
+    (concat (take point s1)
+            (drop point s2))))
+
+(defn generic-mutation
+  "Randomly mutates lists with elements from other lists in the population."
+  [list prob]
+  (map
+   (fn [s-list]
+     (map
+      (fn [test]
+        (if (> prob (rand-int 100))
+          (let [r-s (rand-int (count list))
+                r-t (rand-int (count (nth list r-s)))]
+            (nth (nth list r-s)
+                 r-t))
+          test))
+      s-list))
+   list))
