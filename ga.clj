@@ -56,6 +56,7 @@ children is the number of children to create each generation; mut-r is the rate 
                 ((:init-fn func-map) total-left))
                (dec num)))))))
 
+;; Some helpers for using the framework
 
 (defn list-crossover
   "A generic crossover function for simple lists. You may need to write your own."
@@ -81,3 +82,16 @@ children is the number of children to create each generation; mut-r is the rate 
           test))
       s-list))
    list))
+
+(defn rand-from-list
+  "Given a list of elements, construct a new list using the elements in that set.
+Ex: (rand-from-list '(1 2 3 4 5) 2) => (3 5)"
+  [lst num]
+  (let [total-el (count lst)]
+    (map (fn [x] (nth lst (rand-int total-el))) (range 0 num))))
+
+(defn rand-pop
+  "Creates a population using rand-from list. Helpful for creating init-fn."
+  [lst num num-pop]
+  (map (fn [x] (rand-from-list lst num)) (range 0 num-pop)))
+
