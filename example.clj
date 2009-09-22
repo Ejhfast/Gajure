@@ -1,5 +1,5 @@
-(ns gajure
-  (:load-file "ga.clj"))
+(ns example
+  (:use [gajure]))
 
 (comment
   "This provides an example use of the GA framework. We evolve the string helloworld.")

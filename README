@@ -1,0 +1,10 @@
+First, make sure that Gajure/ is on you CLASSPATH
+
+Then, the example can be run as follows:
+
+(use 'example)
+(run-example)
+
+To import the gajure namespace do:
+
+(use 'gajure)
