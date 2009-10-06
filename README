@@ -1,4 +1,9 @@
-First, make sure that Gajure/ is on your CLASSPATH
+To use the "parallel" branch, you will first need to follow the 
+intructions here: 
+
+http://groups.google.com/group/clojure/browse_thread/thread/f1f30f3d99141960
+
+Then, make sure that Gajure/ is on your CLASSPATH
 
 Then, the example can be run as follows:
 
