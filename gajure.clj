@@ -1,5 +1,6 @@
 (ns gajure
-  (:use [clojure.contrib.seq-utils]))
+  (:use [clojure.contrib.seq-utils])
+  (:use [clojure.par]))
 
 (comment
   "This is a framework for creating genetic algorithms in clojure"
@@ -14,13 +15,13 @@
                           [(first pop-fits) 0])
         max-fitness (apply + pop-fits)
         pick-one (fn [num] (second (first (drop-while #(< (first %) num) inc-fits))))]
-    (map (fn [x] (nth pop (pick-one (rand-int max-fitness)))) (range num))))
+    (pmap (fn [x] (nth pop (pick-one (rand-int max-fitness)))) (range num))))
 
 (defn do-crossover
   "Apply cross-fn to plist, partitioned into groups of num-parents. For instance,
 traditional 2-parent crossover requires that num-parents equal 2."
   [p-list cross-fn num-parents]
-  (map cross-fn (partition num-parents p-list)))
+  (pmap cross-fn (partition num-parents p-list)))
 
 (defn run-ga
   "Pass two maps, one for functions, the other for settings.
@@ -71,7 +72,7 @@ children is the number of children to create each generation; mut-r is the rate 
   [list prob]
   (map
    (fn [s-list]
-     (map
+     (pmap
       (fn [test]
         (if (> prob (rand-int 100))
           (let [r-s (rand-int (count list))
@@ -87,10 +88,10 @@ children is the number of children to create each generation; mut-r is the rate 
 Ex: (rand-from-list '(1 2 3 4 5) 2) => (3 5)"
   [lst num]
   (let [total-el (count lst)]
-    (map (fn [x] (nth lst (rand-int total-el))) (range 0 num))))
+    (pmap (fn [x] (nth lst (rand-int total-el))) (range 0 num))))
 
 (defn rand-pop
   "Creates a population using rand-from list. Helpful for creating init-fn."
   [lst num num-pop]
-  (map (fn [x] (rand-from-list lst num)) (range 0 num-pop)))
+  (pmap (fn [x] (rand-from-list lst num)) (range 0 num-pop)))
 
