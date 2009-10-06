@@ -8,3 +8,5 @@ Then, the example can be run as follows:
 To import the gajure namespace do:
 
 (use 'gajure)
+
+If you want parallelism, try the "parallel" branch.
