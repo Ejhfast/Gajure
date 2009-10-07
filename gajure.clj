@@ -9,7 +9,7 @@
 (defn roulette-select 
   "Select num individuals from pop, with an individual's fitness porportional to selection likelihood."
   [pop fit-fn num]
-  (let [pop-fits (map fit-fn pop)
+  (let [pop-fits (pmap fit-fn pop)
         inc-fits (iterate (fn [[pfit idx]]
                              [(+ (nth pop-fits (+ idx 1)) pfit) (+ idx 1)])
                           [(first pop-fits) 0])
@@ -70,7 +70,7 @@ children is the number of children to create each generation; mut-r is the rate 
 (defn generic-mutation
   "Randomly mutates lists with elements from other lists in the population."
   [list prob]
-  (map
+  (pmap
    (fn [s-list]
      (pmap
       (fn [test]
