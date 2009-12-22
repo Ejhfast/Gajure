@@ -22,6 +22,9 @@ traditional 2-parent crossover requires that num-parents equal 2."
   [p-list cross-fn num-parents]
   (map cross-fn (partition num-parents p-list)))
 
+(defn keys-not-nil [lst hash]
+  (reduce #(and %1 %2) (map #(not (nil? (hash %))) lst)))
+
 (defn run-ga
   "Pass two maps, one for functions, the other for settings.
 For funcmap -- init-fn: takes one argument (a number) and initializes population.
@@ -32,6 +35,8 @@ cross-fn: takes a list of vectors, each vector containing the parent to cross.
 For setting-map -- pop-sz is size of population; gen is number of generations to run;
 children is the number of children to create each generation; mut-r is the rate of mutation (0-100)"
   [func-map setting-map]
+  {:pre [(and (keys-not-nil (list :init-fn :fit-fn :mut-fn :sel-fn :cross-fn) func-map)
+              (keys-not-nil (list :pop-sz :gen :children :mut-r) setting-map))]}
   (let [ipop ((:init-fn func-map) (:pop-sz setting-map))]
     (loop [pop ipop
            num (:gen setting-map)]
