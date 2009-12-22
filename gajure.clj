@@ -23,6 +23,7 @@ traditional 2-parent crossover requires that num-parents equal 2."
   (map cross-fn (partition num-parents p-list)))
 
 (defn keys-not-nil [lst hash]
+  "For each key in a list of keys, make sure that is is not nil in the hash"
   (reduce #(and %1 %2) (map #(not (nil? (hash %))) lst)))
 
 (defn run-ga
