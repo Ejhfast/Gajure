@@ -75,6 +75,7 @@ children is the number of children to create each generation; mut-r is the rate 
 (defn generic-mutation
   "Randomly mutates lists with elements from other lists in the population."
   [list prob]
+  {:pre [(and (>= prob 1) (<= prob 100))]}
   (map
    (fn [s-list]
      (map
