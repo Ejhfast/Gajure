@@ -1,4 +1,4 @@
-(ns gajure
+(ns gajure.core
   (:use [clojure.contrib.seq-utils]))
 
 (comment

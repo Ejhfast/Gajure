@@ -1,5 +1,5 @@
 (ns example
-  (:use [gajure]))
+  (:use [gajure.core]))
 
 (comment
   "This provides an example use of the GA framework. We evolve the string helloworld.")
