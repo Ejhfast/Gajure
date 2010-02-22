@@ -4,7 +4,7 @@ A small genetic algorithm framework, written in Clojure
 
 ## Installation
 
-Run the following commands:
+Install leiningen! Then, run the following commands:
 
 lein deps
 lein swank
