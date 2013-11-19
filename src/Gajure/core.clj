@@ -9,7 +9,7 @@
   [pop fit-fn num]
   (let [pop-fits (map fit-fn pop)
         inc-fits (iterate (fn [[pfit idx]]
-                             [(+ (nth pop-fits (+ idx 1)) pfit) (+ idx 1)])
+                             [(+ (nth pop-fits (inc idx)) pfit) (inc idx)])
                           [(first pop-fits) 0])
         max-fitness (apply + pop-fits)
         pick-one (fn [num] (second (first (drop-while #(< (first %) num) inc-fits))))]
