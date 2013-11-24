@@ -14,10 +14,9 @@ Fire up a repl by navigating to the Gajure directory and typing
 
 Load both the core and example files using
 
-(load-file "<path to core file")
-(load-file "<path to example file")
-
-(example/run-example)
+    (load-file "<path to core file")
+    (load-file "<path to example file")
+    (example/run-example)
 
 ## License
 
