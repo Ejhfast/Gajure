@@ -1,16 +1,15 @@
-(ns gajure.core
-  (:use [clojure.contrib.seq-utils]))
+(ns gajure.core)
 
 (comment
   "This is a framework for creating genetic algorithms in clojure"
   "It requires the user to create a few specific operators, but otherwise works generically on sequences.")
 
-(defn roulette-select 
+(defn roulette-select
   "Select num individuals from pop, with an individual's fitness porportional to selection likelihood."
   [pop fit-fn num]
   (let [pop-fits (map fit-fn pop)
         inc-fits (iterate (fn [[pfit idx]]
-                             [(+ (nth pop-fits (+ idx 1)) pfit) (+ idx 1)])
+                             [(+ (nth pop-fits (inc idx)) pfit) (inc idx)])
                           [(first pop-fits) 0])
         max-fitness (apply + pop-fits)
         pick-one (fn [num] (second (first (drop-while #(< (first %) num) inc-fits))))]

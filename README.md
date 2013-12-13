@@ -4,15 +4,19 @@ A small genetic algorithm framework, written in Clojure
 
 ## Installation
 
-Install leiningen! Then, run the following commands:
+Install leiningen! Then, run the following command:
 
-lein deps
-lein swank
+    lein deps
 
-Then connect via emacs/SLIME. Navigate to src/Example and complile (C-c C-c)
-example.clj, then run:
+Fire up a repl by navigating to the Gajure directory and typing
 
-(example/run-example)
+    lein repl
+
+Load both the core and example files using
+
+    (load-file "<path to core file")
+    (load-file "<path to example file")
+    (example/run-example)
 
 ## License
 
