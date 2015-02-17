@@ -64,6 +64,7 @@ traditional 2-parent crossover requires that num-parents equal 2."
                 ((:gen-complete-fn func-map) fittest fittest-fit))
               (recur
                (concat
+                [fittest]               ; elitism!
                 ((:mut-fn func-map)
                  (do-crossover
                   ((:sel-fn func-map)
