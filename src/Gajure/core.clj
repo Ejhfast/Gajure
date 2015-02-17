@@ -27,27 +27,44 @@ traditional 2-parent crossover requires that num-parents equal 2."
 
 (defn run-ga
   "Pass two maps, one for functions, the other for settings.
-For funcmap -- init-fn: takes one argument (a number) and initializes population.
-fit-fn: takes a population member and outputs fitness
-mut-fn: takes a population, and returns a mutated population.
-sel-fn: takes a population, a fitness function, and a number to select. Returns selected members.
-cross-fn: takes a list of vectors, each vector containing the parent to cross.
-For setting-map -- pop-sz is size of population; gen is number of generations to run;
-children is the number of children to create each generation; mut-r is the rate of mutation (0-100)"
+  For funcmap -- init-fn: takes one argument (a number) and initializes population.
+  fit-fn: takes a population member and outputs fitness
+  mut-fn: takes a population, and returns a mutated population.
+  sel-fn: takes a population, a fitness function, and a number to select. Returns selected members.
+  cross-fn: takes a list of vectors, each vector containing the parent to cross.
+  gen-complete-fn: takes the fittest individual and its fitness level.  Called everytime a generation is completed.
+  done-fn: takes the fittest individual and its fitness level.  Called when the number of generations have been completed.
+  For setting-map -- pop-sz is size of population; gen is number of generations to run;
+  children is the number of children to create each generation; mut-r is the rate of mutation (0-100)
+  min-or-max: is either :min if minimization of fitness is being done, or :max if maximizing the fitness"
   [func-map setting-map]
   {:pre [(and (keys-not-nil (list :init-fn :fit-fn :mut-fn :sel-fn :cross-fn) func-map)
               (keys-not-nil (list :pop-sz :gen :children :mut-r) setting-map))]}
-  (let [ipop ((:init-fn func-map) (:pop-sz setting-map))]
+  ;; provide defaults for :done-fn and :gen-complete-fn
+  (let [func-map (merge-with #(or %1 %2) func-map 
+                             {:done-fn #(println (str "Done\n" %1 "\nFitness: " %2)) 
+                              :gen-complete-fn #(println (str %1 "\nFitness: " %2))})
+        setting-map (merge-with #(or %1 %2) setting-map
+                                {:min-or-max :max})
+        ipop ((:init-fn func-map) (:pop-sz setting-map))]
     (loop [pop ipop
            num (:gen setting-map)]
-      (if (zero? num)
-        (do ;; insert information you would like printed here
-          (println (first (sort-by (:fit-fn func-map) > pop ))))
+      (let [fittest (first (sort-by 
+                            (:fit-fn func-map) 
+                            ; use appropriate sort based on
+                            ; whether minimizing or maximizing 
+                            (if (= (:min-or-max setting-map) :max) > <) 
+                            pop))
+            fittest-fit ((:fit-fn func-map) fittest)]
+          (if (zero? num)
+            (do ;; insert information you would like printed here
+              ((:done-fn func-map) fittest fittest-fit))
             (let [total-left (- (:pop-sz setting-map) (:children setting-map))]
               (do ;; and here
-                (println (first (sort-by (:fit-fn func-map) > pop ))))
+                ((:gen-complete-fn func-map) fittest fittest-fit))
               (recur
                (concat
+                [fittest]               ; elitism!
                 ((:mut-fn func-map)
                  (do-crossover
                   ((:sel-fn func-map)
